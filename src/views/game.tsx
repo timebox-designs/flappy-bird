@@ -31,7 +31,7 @@ const isGameOver = eq(Constants.GameOver);
 
 const createSound = (audio: AVPlaybackSource) => Audio.Sound.createAsync(audio);
 
-const Home = () => {
+const Game = () => {
   const [state, setState] = useState(Constants.StartGame);
   const [score, setScore] = useState(0);
 
@@ -100,4 +100,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Game;
