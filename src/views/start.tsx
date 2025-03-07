@@ -1,13 +1,9 @@
-import { Image, StyleSheet, TouchableWithoutFeedback, View } from "react-native";
+import { Image, StyleSheet, TouchableWithoutFeedback } from "react-native";
 
 import { Images } from "@/assets/images";
+import { Container } from "@/components/container";
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   logo: {
     width: 220,
     height: 60,
@@ -18,12 +14,12 @@ const styles = StyleSheet.create({
 });
 
 export const Start = ({ onStart }: { onStart: VoidFunction }) => (
-  <View style={styles.container}>
+  <Container>
     <Image source={Images.Logo} style={styles.logo} />
     <TouchableWithoutFeedback onPress={onStart}>
       <Image source={Images.Play} style={styles.play} />
     </TouchableWithoutFeedback>
-  </View>
+  </Container>
 );
 
 export default Start;

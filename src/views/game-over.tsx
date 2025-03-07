@@ -1,14 +1,10 @@
 import React, { useEffect } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet } from "react-native";
 
 import { Images } from "@/assets/images";
+import { Container } from "@/components/container";
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   image: {
     width: 220,
     height: 60,
@@ -22,9 +18,9 @@ const GameOver = ({ onRestart }: { onRestart: VoidFunction }) => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <Container>
       <Image source={Images.GameOver} style={styles.image} />
-    </View>
+    </Container>
   );
 };
 
