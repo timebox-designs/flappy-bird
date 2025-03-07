@@ -19,7 +19,7 @@ export type Entity<P = unknown> = P & {
 };
 
 export type Entities = Dictionary<Entity>;
-export type EntityGroups = Dictionary<Array<Entity>>;
+export type EntityGroups = Dictionary<Entity[]>;
 
 export type Physics = {
   engine: Engine;

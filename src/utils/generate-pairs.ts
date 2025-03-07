@@ -1,5 +1,6 @@
-import { Constants } from "@/constants";
 import { getRandomInt } from "./random";
+
+import { Constants } from "@/constants";
 
 export const generatePairs = (offset = 0) => {
   const x = Constants.MaxWidth + offset;
