@@ -41,6 +41,8 @@ export const physics = (blob: Entities & Physics, { touches, time, dispatch }: U
   const { engine, ...entities } = blob;
   const bird = entities.Bird;
 
+  Events.off(engine, "collisionStart");
+
   touches.filter(onPress).forEach(() => {
     dispatch(PRESS);
     updateVerticalVelocity(bird);
