@@ -1,4 +1,4 @@
-import { Constants } from "../constants";
+import { Constants } from "@/constants";
 import { getRandomInt } from "./random";
 
 export const generatePairs = (offset = 0) => {

@@ -1,6 +1,6 @@
 import { ImageProps } from "react-native";
 
-import { Dictionary } from "@/types/dictionary";
+import { Dictionary } from "@/types";
 
 export const Images: Dictionary<ImageProps> = {
   Background: require("./background.png"),

@@ -5,15 +5,8 @@ import {
 } from "react-native-game-engine";
 
 import { Constants } from "@/constants";
-import { Dictionary } from "@/types/dictionary";
-import { Entities, Entity } from "@/types/entity";
-import { Physics } from "@/types/physics";
+import { Entities, Entity, EntityGroups, Func, Physics, Tuple } from "@/types";
 import { generatePairs } from "@/utils/generate-pairs";
-
-type Func<T> = (t: T) => T;
-type Tuple<T, U> = [T, U];
-
-type EntityGroups = Dictionary<Entity[]>;
 
 const GAME_OVER = { type: "game-over" };
 const PRESS = { type: "press" };

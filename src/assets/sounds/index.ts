@@ -1,6 +1,6 @@
 import { AVPlaybackSource } from "expo-av";
 
-import { Dictionary } from "@/types/dictionary";
+import { Dictionary } from "@/types";
 
 export const Sounds: Dictionary<AVPlaybackSource> = {
   Hit: require("./hit.mp3"),

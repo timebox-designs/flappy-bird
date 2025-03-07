@@ -2,10 +2,7 @@ import { Bodies } from "matter-js";
 import { Image, StyleSheet, View } from "react-native";
 
 import { Images } from "@/assets/images";
-import { BoundingBox } from "@/types/bounding-box";
-import { Entity } from "@/types/entity";
-import { Position } from "@/types/position";
-import { Size } from "@/types/size";
+import { BoundingBox, Entity, Position, Size } from "@/types";
 import { createBoundingBox } from "@/utils/bounding-box";
 
 const styles = (boundingBox: BoundingBox) =>
