@@ -27,7 +27,7 @@ const Bird = ({ body }: Entity) => {
 
   const rotation = rotate.interpolate({
     inputRange: [-10, 0, 10, 20],
-    outputRange: ["-20deg", "0deg", "45deg", "120deg"],
+    outputRange: ["-20deg", "0deg", "20deg", "45deg"],
     extrapolate: "clamp",
   });
 
