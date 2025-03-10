@@ -1,4 +1,4 @@
-import { Body, Engine } from "matter-js";
+import { Body, Engine, Vector } from "matter-js";
 
 export type Dictionary<T> = Record<string, T>;
 export type Func<T> = (t: T) => T;
@@ -9,10 +9,7 @@ export type Size = {
   width: number;
 };
 
-export type BoundingBox = Size & {
-  top: number;
-  left: number;
-};
+export type BoundingBox = Vector & Size;
 
 export type Entity<P = unknown> = P & {
   body: Body;

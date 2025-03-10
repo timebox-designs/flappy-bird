@@ -1,26 +1,36 @@
-import { Bodies } from "matter-js";
+import { Bodies, Vector } from "matter-js";
 import { Animated, StyleSheet, useAnimatedValue } from "react-native";
 
 import { Images } from "@/assets/images";
 import { BoundingBox, Entity, Position, Size } from "@/types";
-import { createBoundingBox } from "@/utils/bounding-box";
 
-const styles = (boundingBox: BoundingBox, rotation: Animated.AnimatedInterpolation<string>) =>
+const styles = ({ x, y, ...size }: BoundingBox, rotation: Animated.AnimatedInterpolation<string>) =>
   StyleSheet.create({
     bird: {
       position: "absolute",
       resizeMode: "stretch",
       transform: [{ rotate: rotation }],
-      ...boundingBox,
+      top: y,
+      left: x,
+      ...size,
     },
   });
 
 let tick = 0;
 let frame = 0;
 
-const Bird = ({ body }: Entity) => {
+const Bird = ({ body: { bounds, position, velocity } }: Entity) => {
+  const { x: width, y: height } = Vector.sub(bounds.max, bounds.min);
+
+  const boundingBox = {
+    x: position.x - width / 2,
+    y: position.y - height / 2,
+    width,
+    height,
+  };
+
   const rotate = useAnimatedValue(0);
-  rotate.setValue(body.velocity.y);
+  rotate.setValue(velocity.y);
 
   tick = ++tick % 5;
   if (tick === 0) frame = ++frame % 3;
@@ -32,10 +42,7 @@ const Bird = ({ body }: Entity) => {
   });
 
   return (
-    <Animated.Image
-      source={Images[`Bird${frame}`]}
-      style={styles(createBoundingBox(body), rotation).bird}
-    />
+    <Animated.Image source={Images[`Bird${frame}`]} style={styles(boundingBox, rotation).bird} />
   );
 };
 

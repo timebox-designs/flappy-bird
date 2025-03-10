@@ -1,22 +1,30 @@
-import { Bodies } from "matter-js";
+import { Bodies, Vector } from "matter-js";
 import { Image, StyleSheet, View } from "react-native";
 
 import { Images } from "@/assets/images";
 import { BoundingBox, Entity, Position, Size } from "@/types";
-import { createBoundingBox } from "@/utils/bounding-box";
 
-const styles = (boundingBox: BoundingBox) =>
+const styles = ({ x, y, ...size }: BoundingBox) =>
   StyleSheet.create({
     floor: {
       position: "absolute",
       flexDirection: "row",
-      ...boundingBox,
+      top: y,
+      left: x,
+      ...size,
     },
   });
 
-const Floor = ({ body }: Entity) => {
-  const boundingBox = createBoundingBox(body);
-  const { width, height } = boundingBox;
+const Floor = ({ body: { bounds, position } }: Entity) => {
+  const { x: width, y: height } = Vector.sub(bounds.max, bounds.min);
+
+  const boundingBox = {
+    x: position.x - width / 2,
+    y: position.y - height / 2,
+    width,
+    height,
+  };
+
   const iterations = Array(Math.ceil(width / height));
 
   return (
