@@ -4,16 +4,20 @@ import {
   GameEngineUpdateEventOptionType as UpdateEvent,
 } from "react-native-game-engine";
 
-import { Constants } from "@/constants";
-import { Func, Sprite, SpriteGroup, System, Tuple } from "@/types";
+import { constants } from "@/constants";
+import { Domain, Sprite } from "@/types";
 import { generatePairs } from "@/utils/generate-pairs";
 
+const { MaxWidth } = constants;
+
+const COLLISION_START = "collisionStart";
 const GAME_OVER = { type: "game-over" };
 const PRESS = { type: "press" };
 const SCORE = { type: "score" };
 
 const onPress = (touch: TouchEvent) => touch.type === "press";
 
+type State = (domain: Domain, event: UpdateEvent) => Domain;
 type Fn = (sprite: Sprite, vector: Vector) => void;
 
 const move: Fn = (sprite, direction) => Body.translate(sprite.body, direction);
@@ -21,61 +25,95 @@ const setPosition: Fn = (sprite, position) => Body.setPosition(sprite.body, posi
 const setVelocity: Fn = (sprite, velocity) => Body.setVelocity(sprite.body, velocity);
 
 const groupBy =
-  (iteratee: Func<string>) =>
-  (acc: SpriteGroup, [key, value]: Tuple<string, Sprite>) => {
+  (iteratee: (s: string) => number) =>
+  (acc: Sprite[][], [key, value]: [string, Sprite]) => {
     (acc[iteratee(key)] ??= []).push(value);
     return acc;
   };
 
-const toPairs = groupBy((key) => key.split(":")[2]);
+const toPairs = groupBy((key) => Number(key.split(":")[1]));
 
 let scored = false;
 
-export const physics = (system: System, { touches, time, dispatch }: UpdateEvent) => {
-  const { engine, ...entities } = system;
-  const bird = entities.Bird;
+// flyingScene
+
+const flyingScene: State = (domain, { touches, dispatch }) => {
+  const { engine, bird, ...sprites } = domain;
 
   touches.filter(onPress).forEach(() => {
     dispatch(PRESS);
     setVelocity(bird, { x: 0, y: -8 });
   });
 
-  const pairs = Object.entries(entities)
-    .filter(([key]) => key.startsWith("Pipe"))
-    .reduce(toPairs, {});
-
-  Object.values(pairs).forEach(([top, bottom]) => {
-    if (!scored && bird.body.position.x > top.body.position.x) {
-      dispatch(SCORE);
-      scored = true;
-    }
-
-    if (top.body.bounds.max.x <= 0) {
-      const pipe = generatePairs(Constants.MaxWidth * 0.9);
-
-      setPosition(top, pipe.top.position);
-      setPosition(bottom, pipe.bottom.position);
-      scored = false;
-    }
-
-    [top, bottom].forEach((pipe) => move(pipe, { x: -3, y: 0 }));
-  });
-
-  Object.entries(entities)
-    .filter(([key]) => key.startsWith("Floor"))
-    .forEach(([_, floor]) => {
-      if (floor.body.position.x + Constants.MaxWidth / 2 <= 0) {
-        setPosition(floor, {
-          x: Constants.MaxWidth + Constants.MaxWidth / 2,
-          y: floor.body.position.y,
-        });
+  Object.entries(sprites)
+    .filter(([key]) => key.startsWith("pipe"))
+    .reduce(toPairs, [])
+    .forEach(([topPipe, bottomPipe]) => {
+      if (!scored && bird.body.position.x > topPipe.body.position.x) {
+        dispatch(SCORE);
+        scored = true;
       }
+
+      if (topPipe.body.bounds.max.x <= 0) {
+        const { top, bottom } = generatePairs(MaxWidth * 0.9);
+
+        setPosition(topPipe, top.position);
+        setPosition(bottomPipe, bottom.position);
+        scored = false;
+      }
+
+      move(topPipe, { x: -3, y: 0 });
+      move(bottomPipe, { x: -3, y: 0 });
+    });
+
+  Object.entries(sprites)
+    .filter(([key]) => key.startsWith("floor"))
+    .forEach(([_, floor]) => {
+      if (floor.body.position.x + MaxWidth / 2 <= 0)
+        setPosition(floor, { x: MaxWidth + MaxWidth / 2, y: floor.body.position.y });
+
       move(floor, { x: -3, y: 0 });
     });
 
-  Events.on(engine, "collisionStart", () => dispatch(GAME_OVER));
-  Engine.update(engine, time.delta);
-  Events.off(engine, "collisionStart");
+  Events.on(engine, COLLISION_START, (e) => {
+    const [{ bodyB }] = e.pairs;
 
-  return system;
+    if (bodyB.label === "floor") dispatch(GAME_OVER);
+    else state = crashScene;
+  });
+
+  return domain;
+};
+
+// crashScene
+
+let changeDirection = false;
+
+const crashScene: State = (domain, { dispatch }) => {
+  const { engine, bird } = domain;
+
+  if (!changeDirection) {
+    move(bird, { x: -10, y: -10 });
+    changeDirection = true;
+  }
+
+  Events.on(engine, COLLISION_START, () => {
+    dispatch(GAME_OVER);
+    changeDirection = false;
+    state = flyingScene;
+  });
+
+  return domain;
+};
+
+let state = flyingScene;
+
+// physics
+
+export const physics: State = (domain, event) => {
+  const updatedDomain = state(domain, event);
+
+  Engine.update(domain.engine, event.time.delta);
+  Events.off(domain.engine, COLLISION_START);
+  return updatedDomain;
 };

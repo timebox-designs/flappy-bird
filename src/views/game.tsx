@@ -7,7 +7,7 @@ import GameOver from "./game-over";
 import Start from "./start";
 
 import { Sounds } from "@/assets/sounds";
-import { Constants } from "@/constants";
+import { constants } from "@/constants";
 import { physics } from "@/physics";
 import { sprites } from "@/sprites";
 import { eq } from "@/utils/eq";
@@ -26,13 +26,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const isRunning = eq(Constants.Running);
-const isGameOver = eq(Constants.GameOver);
+const isRunning = eq(constants.Running);
+const isGameOver = eq(constants.GameOver);
 
 const createSound = (audio: AVPlaybackSource) => Audio.Sound.createAsync(audio);
 
 const Game = () => {
-  const [state, setState] = useState(Constants.StartGame);
+  const [state, setState] = useState(constants.StartGame);
   const [score, setScore] = useState(0);
 
   const [hitAudio, setHitAudio] = useState<Audio.SoundObject>();
@@ -50,15 +50,15 @@ const Game = () => {
   }, []);
 
   const onStart = () => {
-    setState(Constants.Running);
+    setState(constants.Running);
     setScore(0);
   };
 
-  const onRestart = () => setState(Constants.StartGame);
+  const onRestart = () => setState(constants.StartGame);
 
   const onGameOver = async () => {
     await hitAudio?.sound.replayAsync();
-    setState(Constants.GameOver);
+    setState(constants.GameOver);
   };
 
   const onPress = async () => await wingAudio?.sound.replayAsync();
@@ -90,7 +90,7 @@ const Game = () => {
   return (
     <GameEngine
       running={isRunning(state)}
-      entities={sprites()}
+      entities={sprites.create()}
       systems={[physics]}
       onEvent={onEvent}
       style={styles.engine}
