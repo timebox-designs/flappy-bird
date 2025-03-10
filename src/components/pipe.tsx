@@ -2,7 +2,7 @@ import { Bodies, Vector } from "matter-js";
 import { Image, StyleSheet } from "react-native";
 
 import { Images } from "@/assets/images";
-import { BoundingBox, Entity, Position, Size } from "@/types";
+import { BoundingBox, Position, Size, Sprite } from "@/types";
 
 type Type = "Top" | "Bottom";
 
@@ -17,7 +17,7 @@ const styles = ({ x, y, ...size }: BoundingBox) =>
     },
   });
 
-const Pipe = ({ body: { bounds, position }, type }: Entity<{ type: Type }>) => {
+const Pipe = ({ body: { bounds, position }, type }: Sprite<{ type: Type }>) => {
   const { x: width, y: height } = Vector.sub(bounds.max, bounds.min);
 
   const boundingBox = {

@@ -2,7 +2,7 @@ import { Bodies, Vector } from "matter-js";
 import { Image, StyleSheet, View } from "react-native";
 
 import { Images } from "@/assets/images";
-import { BoundingBox, Entity, Position, Size } from "@/types";
+import { BoundingBox, Position, Size, Sprite } from "@/types";
 
 const styles = ({ x, y, ...size }: BoundingBox) =>
   StyleSheet.create({
@@ -15,7 +15,7 @@ const styles = ({ x, y, ...size }: BoundingBox) =>
     },
   });
 
-const Floor = ({ body: { bounds, position } }: Entity) => {
+const Floor = ({ body: { bounds, position } }: Sprite) => {
   const { x: width, y: height } = Vector.sub(bounds.max, bounds.min);
 
   const boundingBox = {

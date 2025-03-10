@@ -5,7 +5,7 @@ import {
 } from "react-native-game-engine";
 
 import { Constants } from "@/constants";
-import { Entities, Entity, EntityGroups, Func, Physics, Tuple } from "@/types";
+import { Func, Physics, Sprite, SpriteGroup, Sprites, Tuple } from "@/types";
 import { generatePairs } from "@/utils/generate-pairs";
 
 const GAME_OVER = { type: "game-over" };
@@ -16,12 +16,12 @@ const verticalVector = Vector.create(0, -8);
 const horizontalVector = Vector.create(-3, 0);
 
 const onPress = (touch: TouchEvent) => touch.type === "press";
-const updateVerticalVelocity = ({ body }: Entity) => Body.setVelocity(body, verticalVector);
-const updateHorizontalPosition = ({ body }: Entity) => Body.translate(body, horizontalVector);
+const updateVerticalVelocity = ({ body }: Sprite) => Body.setVelocity(body, verticalVector);
+const updateHorizontalPosition = ({ body }: Sprite) => Body.translate(body, horizontalVector);
 
 const groupBy =
   (iteratee: Func<string>) =>
-  (acc: EntityGroups, [key, value]: Tuple<string, Entity>) => {
+  (acc: SpriteGroup, [key, value]: Tuple<string, Sprite>) => {
     (acc[iteratee(key)] ??= []).push(value);
     return acc;
   };
@@ -30,7 +30,7 @@ const toPairs = groupBy((key) => key.split(":")[2]);
 
 let scored = false;
 
-export const physics = (blob: Entities & Physics, { touches, time, dispatch }: UpdateEvent) => {
+export const physics = (blob: Sprites & Physics, { touches, time, dispatch }: UpdateEvent) => {
   const { engine, ...entities } = blob;
   const bird = entities.Bird;
 

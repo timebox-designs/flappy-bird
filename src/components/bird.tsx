@@ -2,7 +2,7 @@ import { Bodies, Vector } from "matter-js";
 import { Animated, StyleSheet, useAnimatedValue } from "react-native";
 
 import { Images } from "@/assets/images";
-import { BoundingBox, Entity, Position, Size } from "@/types";
+import { BoundingBox, Position, Size, Sprite } from "@/types";
 
 const styles = ({ x, y, ...size }: BoundingBox, rotation: Animated.AnimatedInterpolation<string>) =>
   StyleSheet.create({
@@ -19,7 +19,7 @@ const styles = ({ x, y, ...size }: BoundingBox, rotation: Animated.AnimatedInter
 let tick = 0;
 let frame = 0;
 
-const Bird = ({ body: { bounds, position, velocity } }: Entity) => {
+const Bird = ({ body: { bounds, position, velocity } }: Sprite) => {
   const { x: width, y: height } = Vector.sub(bounds.max, bounds.min);
 
   const boundingBox = {

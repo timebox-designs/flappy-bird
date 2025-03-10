@@ -11,12 +11,12 @@ export type Size = {
 
 export type BoundingBox = Vector & Size;
 
-export type Entity<P = unknown> = P & {
+export type Sprite<P = unknown> = P & {
   body: Body;
 };
 
-export type Entities = Dictionary<Entity>;
-export type EntityGroups = Dictionary<Entity[]>;
+export type Sprites = Dictionary<Sprite>;
+export type SpriteGroup = Dictionary<Sprite[]>;
 
 export type Physics = {
   engine: Engine;
