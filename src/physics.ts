@@ -12,12 +12,13 @@ const GAME_OVER = { type: "game-over" };
 const PRESS = { type: "press" };
 const SCORE = { type: "score" };
 
-const verticalVector = Vector.create(0, -8);
-const horizontalVector = Vector.create(-3, 0);
-
 const onPress = (touch: TouchEvent) => touch.type === "press";
-const updateVerticalVelocity = ({ body }: Sprite) => Body.setVelocity(body, verticalVector);
-const updateHorizontalPosition = ({ body }: Sprite) => Body.translate(body, horizontalVector);
+
+type Fn = (sprite: Sprite, vector: Vector) => void;
+
+const move: Fn = (sprite, direction) => Body.translate(sprite.body, direction);
+const setPosition: Fn = (sprite, position) => Body.setPosition(sprite.body, position);
+const setVelocity: Fn = (sprite, velocity) => Body.setVelocity(sprite.body, velocity);
 
 const groupBy =
   (iteratee: Func<string>) =>
@@ -36,7 +37,7 @@ export const physics = (system: System, { touches, time, dispatch }: UpdateEvent
 
   touches.filter(onPress).forEach(() => {
     dispatch(PRESS);
-    updateVerticalVelocity(bird);
+    setVelocity(bird, { x: 0, y: -8 });
   });
 
   const pairs = Object.entries(entities)
@@ -52,24 +53,24 @@ export const physics = (system: System, { touches, time, dispatch }: UpdateEvent
     if (top.body.bounds.max.x <= 0) {
       const pipe = generatePairs(Constants.MaxWidth * 0.9);
 
-      Body.setPosition(top.body, pipe.top.position);
-      Body.setPosition(bottom.body, pipe.bottom.position);
+      setPosition(top, pipe.top.position);
+      setPosition(bottom, pipe.bottom.position);
       scored = false;
     }
 
-    [top, bottom].forEach(updateHorizontalPosition);
+    [top, bottom].forEach((pipe) => move(pipe, { x: -3, y: 0 }));
   });
 
   Object.entries(entities)
     .filter(([key]) => key.startsWith("Floor"))
     .forEach(([_, floor]) => {
       if (floor.body.position.x + Constants.MaxWidth / 2 <= 0) {
-        Body.setPosition(floor.body, {
+        setPosition(floor, {
           x: Constants.MaxWidth + Constants.MaxWidth / 2,
           y: floor.body.position.y,
         });
       }
-      updateHorizontalPosition(floor);
+      move(floor, { x: -3, y: 0 });
     });
 
   Events.on(engine, "collisionStart", () => dispatch(GAME_OVER));

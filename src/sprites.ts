@@ -1,4 +1,4 @@
-import { Engine, World } from "matter-js";
+import { Composite, Engine } from "matter-js";
 
 import { bird } from "@/components/bird";
 import { floor } from "@/components/floor";
@@ -29,7 +29,7 @@ export const sprites = () => {
   const engine = Engine.create({ enableSleeping: false, gravity: { y: 1.2 } });
   const sprites = createSprites();
 
-  World.add(
+  Composite.add(
     engine.world,
     Object.values(sprites).map(({ body }) => body),
   );
