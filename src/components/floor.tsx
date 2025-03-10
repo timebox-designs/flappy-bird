@@ -36,15 +36,16 @@ const Floor = ({ body: { bounds, position } }: Sprite) => {
   );
 };
 
-const createFloor = (position: Vector, size: Size) => {
-  const floor = Bodies.rectangle(position.x, position.y, size.width, size.height, {
-    isStatic: true,
-  });
+export const floor = {
+  create: (position: Vector, size: Size) => {
+    const floor = Bodies.rectangle(position.x, position.y, size.width, size.height, {
+      label: "floor",
+      isStatic: true,
+    });
 
-  return {
-    body: floor,
-    renderer: Floor,
-  };
+    return {
+      body: floor,
+      renderer: Floor,
+    };
+  },
 };
-
-export default createFloor;

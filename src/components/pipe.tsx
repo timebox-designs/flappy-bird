@@ -30,16 +30,17 @@ const Pipe = ({ body: { bounds, position }, type }: Sprite<{ type: Type }>) => {
   return <Image source={Images[type]} style={styles(boundingBox).pipe} />;
 };
 
-const createPipe = (type: Type, position: Vector, size: Size) => {
-  const pipe = Bodies.rectangle(position.x, position.y, size.width, size.height, {
-    isStatic: true,
-  });
+export const pipe = {
+  create: (type: Type, position: Vector, size: Size) => {
+    const pipe = Bodies.rectangle(position.x, position.y, size.width, size.height, {
+      label: "pipe",
+      isStatic: true,
+    });
 
-  return {
-    body: pipe,
-    type,
-    renderer: Pipe,
-  };
+    return {
+      body: pipe,
+      type,
+      renderer: Pipe,
+    };
+  },
 };
-
-export default createPipe;

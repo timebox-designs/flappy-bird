@@ -8,8 +8,8 @@ import Start from "./start";
 
 import { Sounds } from "@/assets/sounds";
 import { Constants } from "@/constants";
-import { entities } from "@/entities";
 import { physics } from "@/physics";
+import { sprites } from "@/sprites";
 import { eq } from "@/utils/eq";
 
 const styles = StyleSheet.create({
@@ -90,7 +90,7 @@ const Game = () => {
   return (
     <GameEngine
       running={isRunning(state)}
-      entities={entities()}
+      entities={sprites()}
       systems={[physics]}
       onEvent={onEvent}
       style={styles.engine}

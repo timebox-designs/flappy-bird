@@ -46,13 +46,15 @@ const Bird = ({ body: { bounds, position, velocity } }: Sprite) => {
   );
 };
 
-const createBird = (position: Vector, size: Size) => {
-  const bird = Bodies.rectangle(position.x, position.y, size.width, size.height);
+export const bird = {
+  create: (position: Vector, size: Size) => {
+    const bird = Bodies.rectangle(position.x, position.y, size.width, size.height, {
+      label: "bird",
+    });
 
-  return {
-    body: bird,
-    renderer: Bird,
-  };
+    return {
+      body: bird,
+      renderer: Bird,
+    };
+  },
 };
-
-export default createBird;
