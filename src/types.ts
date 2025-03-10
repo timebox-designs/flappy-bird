@@ -18,6 +18,6 @@ export type Sprite<P = unknown> = P & {
 export type Sprites = Dictionary<Sprite>;
 export type SpriteGroup = Dictionary<Sprite[]>;
 
-export type Physics = {
+export type System = Sprites & {
   engine: Engine;
 };

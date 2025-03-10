@@ -5,7 +5,7 @@ import {
 } from "react-native-game-engine";
 
 import { Constants } from "@/constants";
-import { Func, Physics, Sprite, SpriteGroup, Sprites, Tuple } from "@/types";
+import { Func, Sprite, SpriteGroup, System, Tuple } from "@/types";
 import { generatePairs } from "@/utils/generate-pairs";
 
 const GAME_OVER = { type: "game-over" };
@@ -30,8 +30,8 @@ const toPairs = groupBy((key) => key.split(":")[2]);
 
 let scored = false;
 
-export const physics = (blob: Sprites & Physics, { touches, time, dispatch }: UpdateEvent) => {
-  const { engine, ...entities } = blob;
+export const physics = (system: System, { touches, time, dispatch }: UpdateEvent) => {
+  const { engine, ...entities } = system;
   const bird = entities.Bird;
 
   touches.filter(onPress).forEach(() => {
@@ -76,5 +76,5 @@ export const physics = (blob: Sprites & Physics, { touches, time, dispatch }: Up
   Engine.update(engine, time.delta);
   Events.off(engine, "collisionStart");
 
-  return blob;
+  return system;
 };
