@@ -2,7 +2,7 @@ import { Bodies, Vector } from "matter-js";
 import { Animated, StyleSheet, useAnimatedValue } from "react-native";
 
 import { Images } from "@/assets/images";
-import { BoundingBox, Position, Size, Sprite } from "@/types";
+import { BoundingBox, Size, Sprite } from "@/types";
 
 const styles = ({ x, y, ...size }: BoundingBox, rotation: Animated.AnimatedInterpolation<string>) =>
   StyleSheet.create({
@@ -46,8 +46,8 @@ const Bird = ({ body: { bounds, position, velocity } }: Sprite) => {
   );
 };
 
-const createBird = (pos: Position, size: Size) => {
-  const bird = Bodies.rectangle(pos.x, pos.y, size.width, size.height);
+const createBird = (position: Vector, size: Size) => {
+  const bird = Bodies.rectangle(position.x, position.y, size.width, size.height);
 
   return {
     body: bird,

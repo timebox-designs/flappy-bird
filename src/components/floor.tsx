@@ -2,7 +2,7 @@ import { Bodies, Vector } from "matter-js";
 import { Image, StyleSheet, View } from "react-native";
 
 import { Images } from "@/assets/images";
-import { BoundingBox, Position, Size, Sprite } from "@/types";
+import { BoundingBox, Size, Sprite } from "@/types";
 
 const styles = ({ x, y, ...size }: BoundingBox) =>
   StyleSheet.create({
@@ -36,8 +36,10 @@ const Floor = ({ body: { bounds, position } }: Sprite) => {
   );
 };
 
-const createFloor = (pos: Position, size: Size) => {
-  const floor = Bodies.rectangle(pos.x, pos.y, size.width, size.height, { isStatic: true });
+const createFloor = (position: Vector, size: Size) => {
+  const floor = Bodies.rectangle(position.x, position.y, size.width, size.height, {
+    isStatic: true,
+  });
 
   return {
     body: floor,

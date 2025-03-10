@@ -2,7 +2,7 @@ import { Bodies, Vector } from "matter-js";
 import { Image, StyleSheet } from "react-native";
 
 import { Images } from "@/assets/images";
-import { BoundingBox, Position, Size, Sprite } from "@/types";
+import { BoundingBox, Size, Sprite } from "@/types";
 
 type Type = "Top" | "Bottom";
 
@@ -30,8 +30,10 @@ const Pipe = ({ body: { bounds, position }, type }: Sprite<{ type: Type }>) => {
   return <Image source={Images[type]} style={styles(boundingBox).pipe} />;
 };
 
-const createPipe = (type: Type, pos: Position, size: Size) => {
-  const pipe = Bodies.rectangle(pos.x, pos.y, size.width, size.height, { isStatic: true });
+const createPipe = (type: Type, position: Vector, size: Size) => {
+  const pipe = Bodies.rectangle(position.x, position.y, size.width, size.height, {
+    isStatic: true,
+  });
 
   return {
     body: pipe,

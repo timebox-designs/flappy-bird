@@ -21,8 +21,3 @@ export type SpriteGroup = Dictionary<Sprite[]>;
 export type Physics = {
   engine: Engine;
 };
-
-export type Position = {
-  x: number;
-  y: number;
-};
