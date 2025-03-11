@@ -26,7 +26,7 @@ const createSprites = () => ({
 
 export const sprites = {
   create: () => {
-    const engine = Engine.create({ enableSleeping: false, gravity: { y: 1.2 } });
+    const engine = Engine.create({ enableSleeping: false, gravity: { y: 0.8 } });
     const sprites = createSprites();
 
     Composite.add(

@@ -8,7 +8,7 @@ const styles = ({ x, y, ...size }: BoundingBox, rotation: Animated.AnimatedInter
   StyleSheet.create({
     bird: {
       position: "absolute",
-      resizeMode: "stretch",
+      resizeMode: "contain",
       transform: [{ rotate: rotation }],
       top: y,
       left: x,
@@ -36,8 +36,8 @@ const Bird = ({ body: { bounds, position, velocity } }: Sprite) => {
   if (tick === 0) frame = ++frame % 3;
 
   const rotation = rotate.interpolate({
-    inputRange: [-10, 0, 10, 20],
-    outputRange: ["-20deg", "0deg", "20deg", "45deg"],
+    inputRange: [-10, 0, 10, 15],
+    outputRange: ["-20deg", "0deg", "20deg", "90deg"],
     extrapolate: "clamp",
   });
 

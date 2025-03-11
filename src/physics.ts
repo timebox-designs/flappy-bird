@@ -31,7 +31,7 @@ const groupBy =
     return acc;
   };
 
-const toPairs = groupBy((key) => Number(key.split(":")[1]));
+const toPairs = groupBy((key) => Number(key.split(":")[1])); // "pipe:n:top|bottom"
 
 let scored = false;
 
@@ -41,8 +41,8 @@ const flyingScene: State = (domain, { touches, dispatch }) => {
   const { engine, bird, ...sprites } = domain;
 
   touches.filter(onPress).forEach(() => {
+    setVelocity(bird, { x: 0, y: -6 });
     dispatch(PRESS);
-    setVelocity(bird, { x: 0, y: -8 });
   });
 
   Object.entries(sprites)
@@ -93,14 +93,16 @@ const crashScene: State = (domain, { dispatch }) => {
   const { engine, bird } = domain;
 
   if (!changeDirection) {
-    move(bird, { x: -10, y: -10 });
+    move(bird, { x: -40, y: -20 });
+    setVelocity(bird, { x: 0, y: 10 });
     changeDirection = true;
   }
 
   Events.on(engine, COLLISION_START, () => {
-    dispatch(GAME_OVER);
     changeDirection = false;
     state = flyingScene;
+    setVelocity(bird, { x: 0, y: 0 });
+    dispatch(GAME_OVER);
   });
 
   return domain;
