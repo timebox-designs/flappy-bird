@@ -57,15 +57,15 @@ const Game = () => {
   const onRestart = () => setState(constants.StartGame);
 
   const onGameOver = async () => {
-    await hitAudio?.sound.replayAsync();
     setState(constants.GameOver);
+    await hitAudio?.sound.replayAsync();
   };
 
   const onPress = async () => await wingAudio?.sound.replayAsync();
 
   const onScore = async () => {
-    await scoreAudio?.sound.replayAsync();
     setScore(score + 1);
+    await scoreAudio?.sound.replayAsync();
   };
 
   const onEvent = async ({ type }: Event) => {

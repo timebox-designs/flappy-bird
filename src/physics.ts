@@ -35,9 +35,9 @@ const toPairs = groupBy((key) => Number(key.split(":")[1])); // "pipe:n:top|bott
 
 let scored = false;
 
-// flyingScene
+// flying
 
-const flyingScene: State = (domain, { touches, dispatch }) => {
+const flying: State = (domain, { touches, dispatch }) => {
   const { engine, bird, ...sprites } = domain;
 
   touches.filter(onPress).forEach(() => {
@@ -77,45 +77,62 @@ const flyingScene: State = (domain, { touches, dispatch }) => {
 
   Events.on(engine, COLLISION_START, (e) => {
     const [{ bodyB }] = e.pairs;
-
-    if (bodyB.label === "floor") dispatch(GAME_OVER);
-    else state = crashScene;
+    state = bodyB.label === "floor" ? gameOver : collision;
   });
 
   return domain;
 };
 
-// crashScene
+// collision
 
-let changeDirection = false;
+const collision: State = (domain) => {
+  const { bird } = domain;
 
-const crashScene: State = (domain, { dispatch }) => {
-  const { engine, bird } = domain;
-
-  if (!changeDirection) {
-    move(bird, { x: -40, y: -20 });
-    setVelocity(bird, { x: 0, y: 10 });
-    changeDirection = true;
-  }
-
-  Events.on(engine, COLLISION_START, () => {
-    changeDirection = false;
-    state = flyingScene;
-    setVelocity(bird, { x: 0, y: 0 });
-    dispatch(GAME_OVER);
-  });
+  move(bird, { x: -40, y: -20 });
+  setVelocity(bird, { x: 0, y: 10 });
+  state = crashing;
 
   return domain;
 };
 
-let state = flyingScene;
+// crashing
+
+const crashing: State = (domain) => {
+  const { engine } = domain;
+  Events.on(engine, COLLISION_START, () => (state = gameOver));
+
+  return domain;
+};
+
+// gameOver
+
+const gameOver: State = (domain, { dispatch }) => {
+  dispatch(GAME_OVER);
+  state = reset;
+
+  return domain;
+};
+
+// reset
+
+const reset: State = (domain) => {
+  const { bird } = domain;
+
+  setVelocity(bird, { x: 0, y: 0 });
+  state = flying;
+
+  return domain;
+};
+
+let state = reset;
 
 // physics
 
 export const physics: State = (domain, event) => {
-  const updatedDomain = state(domain, event);
+  const { engine } = domain;
+  const updatedState = state(domain, event);
 
-  Engine.update(domain.engine, event.time.delta);
-  Events.off(domain.engine, COLLISION_START);
-  return updatedDomain;
+  Engine.update(engine, event.time.delta);
+  Events.off(engine, COLLISION_START);
+  return updatedState;
 };
