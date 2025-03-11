@@ -4,7 +4,7 @@ import { bird } from "@/components/bird";
 import { floor } from "@/components/floor";
 import { pipe } from "@/components/pipe";
 import { constants } from "@/constants";
-import { generatePairs } from "@/utils/generate-pairs";
+import { generatePairs } from "@/utils";
 
 const { MaxWidth, MaxHeight } = constants;
 

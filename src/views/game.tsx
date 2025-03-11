@@ -10,7 +10,7 @@ import { Sounds } from "@/assets/sounds";
 import { constants } from "@/constants";
 import { physics } from "@/physics";
 import { sprites } from "@/sprites";
-import { eq } from "@/utils/eq";
+import { eq } from "@/utils";
 
 const styles = StyleSheet.create({
   engine: {

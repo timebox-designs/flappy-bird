@@ -6,7 +6,7 @@ import {
 
 import { constants } from "@/constants";
 import { Domain, Sprite } from "@/types";
-import { generatePairs } from "@/utils/generate-pairs";
+import { generatePairs } from "@/utils";
 
 const { MaxWidth } = constants;
 
