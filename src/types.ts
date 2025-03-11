@@ -1,10 +1,10 @@
-import { Body, Engine, Vector } from "matter-js";
+import { Body, Engine, Vector } from 'matter-js';
 
 export type Dictionary<T> = Record<string, T>;
 
 export type Size = {
-  height: number;
   width: number;
+  height: number;
 };
 
 export type BoundingBox = Vector & Size;

@@ -1,21 +1,21 @@
-import { Body, Engine, Events, Vector } from "matter-js";
+import { Body, Engine, Events, Vector } from 'matter-js';
 import {
   TouchEvent,
   GameEngineUpdateEventOptionType as UpdateEvent,
-} from "react-native-game-engine";
+} from 'react-native-game-engine';
 
-import { constants } from "@/constants";
-import { Domain, Sprite } from "@/types";
-import { generatePairs } from "@/utils";
+import { constants } from '@/constants';
+import { Domain, Sprite } from '@/types';
+import { generatePairs } from '@/utils';
 
 const { MaxWidth } = constants;
 
-const COLLISION_START = "collisionStart";
-const GAME_OVER = { type: "game-over" };
-const PRESS = { type: "press" };
-const SCORE = { type: "score" };
+const COLLISION_START = 'collisionStart';
+const GAME_OVER = { type: 'game-over' };
+const PRESS = { type: 'press' };
+const SCORE = { type: 'score' };
 
-const onPress = (touch: TouchEvent) => touch.type === "press";
+const onPress = (touch: TouchEvent) => touch.type === 'press';
 
 type State = (domain: Domain, event: UpdateEvent) => Domain;
 type Fn = (sprite: Sprite, vector: Vector) => void;
@@ -31,7 +31,7 @@ const groupBy =
     return acc;
   };
 
-const toPairs = groupBy((key) => Number(key.split(":")[1])); // "pipe:n:top|bottom"
+const toPairs = groupBy((key) => Number(key.split(':')[1])); // "pipe:n:top|bottom"
 
 let scored = false;
 
@@ -46,7 +46,7 @@ const flying: State = (domain, { touches, dispatch }) => {
   });
 
   Object.entries(sprites)
-    .filter(([key]) => key.startsWith("pipe"))
+    .filter(([key]) => key.startsWith('pipe'))
     .reduce(toPairs, [])
     .forEach(([topPipe, bottomPipe]) => {
       if (!scored && bird.body.position.x > topPipe.body.position.x) {
@@ -67,7 +67,7 @@ const flying: State = (domain, { touches, dispatch }) => {
     });
 
   Object.entries(sprites)
-    .filter(([key]) => key.startsWith("floor"))
+    .filter(([key]) => key.startsWith('floor'))
     .forEach(([_, floor]) => {
       if (floor.body.position.x + MaxWidth / 2 <= 0)
         setPosition(floor, { x: MaxWidth + MaxWidth / 2, y: floor.body.position.y });
@@ -77,7 +77,7 @@ const flying: State = (domain, { touches, dispatch }) => {
 
   Events.on(engine, COLLISION_START, (e) => {
     const [{ bodyB }] = e.pairs;
-    state = bodyB.label === "floor" ? gameOver : collision;
+    state = bodyB.label === 'floor' ? gameOver : collision;
   });
 
   return domain;

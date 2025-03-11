@@ -1,3 +1,3 @@
 export const Fonts = {
-  FlappyBird: require("./fb.ttf"),
+  FlappyBird: require('./fb.ttf'),
 };

@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import { Image, StyleSheet } from "react-native";
+import React, { useEffect } from 'react';
+import { Image, StyleSheet } from 'react-native';
 
-import { Images } from "@/assets/images";
-import { Container } from "@/components/container";
+import { Images } from '@/assets/images';
+import { Container } from '@/components/container';
 
 export const styles = StyleSheet.create({
   image: {

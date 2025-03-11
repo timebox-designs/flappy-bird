@@ -1,11 +1,11 @@
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
-import { ImageBackground, StatusBar } from "react-native";
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
+import { ImageBackground, StatusBar } from 'react-native';
 
-import { Fonts } from "@/assets/fonts";
-import { Images } from "@/assets/images";
-import Game from "@/views/game";
+import { Fonts } from '@/assets/fonts';
+import { Images } from '@/assets/images';
+import Game from '@/views/game';
 
 SplashScreen.preventAutoHideAsync();
 

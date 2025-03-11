@@ -1,7 +1,7 @@
-import { Image, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { Image, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 
-import { Images } from "@/assets/images";
-import { Container } from "@/components/container";
+import { Images } from '@/assets/images';
+import { Container } from '@/components/container';
 
 const styles = StyleSheet.create({
   logo: {

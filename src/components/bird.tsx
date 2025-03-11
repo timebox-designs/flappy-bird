@@ -1,14 +1,14 @@
-import { Bodies, Vector } from "matter-js";
-import { Animated, StyleSheet, useAnimatedValue } from "react-native";
+import { Bodies, Vector } from 'matter-js';
+import { Animated, StyleSheet, useAnimatedValue } from 'react-native';
 
-import { Images } from "@/assets/images";
-import { BoundingBox, Size, Sprite } from "@/types";
+import { Images } from '@/assets/images';
+import { BoundingBox, Size, Sprite } from '@/types';
 
 const styles = ({ x, y, ...size }: BoundingBox, rotation: Animated.AnimatedInterpolation<string>) =>
   StyleSheet.create({
     bird: {
-      position: "absolute",
-      resizeMode: "contain",
+      position: 'absolute',
+      resizeMode: 'contain',
       transform: [{ rotate: rotation }],
       top: y,
       left: x,
@@ -37,8 +37,8 @@ const Bird = ({ body: { bounds, position, velocity } }: Sprite) => {
 
   const rotation = rotate.interpolate({
     inputRange: [-10, 0, 10, 15],
-    outputRange: ["-20deg", "0deg", "20deg", "90deg"],
-    extrapolate: "clamp",
+    outputRange: ['-20deg', '0deg', '20deg', '90deg'],
+    extrapolate: 'clamp',
   });
 
   return (
@@ -49,7 +49,7 @@ const Bird = ({ body: { bounds, position, velocity } }: Sprite) => {
 export const bird = {
   create: (position: Vector, size: Size) => {
     const bird = Bodies.rectangle(position.x, position.y, size.width, size.height, {
-      label: "bird",
+      label: 'bird',
     });
 
     return {

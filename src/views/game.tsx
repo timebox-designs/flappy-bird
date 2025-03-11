@@ -1,27 +1,27 @@
-import { Audio, AVPlaybackSource } from "expo-av";
-import { useEffect, useState } from "react";
-import { StyleSheet, Text } from "react-native";
-import { GameEngine } from "react-native-game-engine";
+import { Audio, AVPlaybackSource } from 'expo-av';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text } from 'react-native';
+import { GameEngine } from 'react-native-game-engine';
 
-import GameOver from "./game-over";
-import Start from "./start";
+import GameOver from './game-over';
+import Start from './start';
 
-import { Sounds } from "@/assets/sounds";
-import { constants } from "@/constants";
-import { physics } from "@/physics";
-import { sprites } from "@/sprites";
-import { eq } from "@/utils";
+import { Sounds } from '@/assets/sounds';
+import { constants } from '@/constants';
+import { physics } from '@/physics';
+import { sprites } from '@/sprites';
+import { eq } from '@/utils';
 
 const styles = StyleSheet.create({
   engine: {
-    display: "flex",
+    display: 'flex',
     flex: 1,
   },
   score: {
-    fontFamily: "FlappyBird",
+    fontFamily: 'FlappyBird',
     fontSize: 48,
-    textAlign: "center",
-    color: "white",
+    textAlign: 'center',
+    color: 'white',
     marginTop: 100,
   },
 });
@@ -45,7 +45,7 @@ const Game = () => {
         setHitAudio(hit);
         setScoreAudio(score);
         setWingAudio(wing);
-      },
+      }
     );
   }, []);
 
@@ -70,15 +70,15 @@ const Game = () => {
 
   const onEvent = async ({ type }: Event) => {
     switch (type) {
-      case "game-over":
+      case 'game-over':
         await onGameOver();
         break;
 
-      case "press":
+      case 'press':
         await onPress();
         break;
 
-      case "score":
+      case 'score':
         await onScore();
         break;
     }
@@ -93,8 +93,7 @@ const Game = () => {
       entities={sprites.create()}
       systems={[physics]}
       onEvent={onEvent}
-      style={styles.engine}
-    >
+      style={styles.engine}>
       <Text style={styles.score}>{score}</Text>
     </GameEngine>
   );

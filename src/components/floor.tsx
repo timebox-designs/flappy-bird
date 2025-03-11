@@ -1,14 +1,14 @@
-import { Bodies, Vector } from "matter-js";
-import { Image, StyleSheet, View } from "react-native";
+import { Bodies, Vector } from 'matter-js';
+import { Image, StyleSheet, View } from 'react-native';
 
-import { Images } from "@/assets/images";
-import { BoundingBox, Size, Sprite } from "@/types";
+import { Images } from '@/assets/images';
+import { BoundingBox, Size, Sprite } from '@/types';
 
 const styles = ({ x, y, ...size }: BoundingBox) =>
   StyleSheet.create({
     floor: {
-      position: "absolute",
-      flexDirection: "row",
+      position: 'absolute',
+      flexDirection: 'row',
       top: y,
       left: x,
       ...size,
@@ -39,7 +39,7 @@ const Floor = ({ body: { bounds, position } }: Sprite) => {
 export const floor = {
   create: (position: Vector, size: Size) => {
     const floor = Bodies.rectangle(position.x, position.y, size.width, size.height, {
-      label: "floor",
+      label: 'floor',
       isStatic: true,
     });
 
