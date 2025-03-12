@@ -24,6 +24,8 @@ const move: Fn = (sprite, direction) => Body.translate(sprite.body, direction);
 const setPosition: Fn = (sprite, position) => Body.setPosition(sprite.body, position);
 const setVelocity: Fn = (sprite, velocity) => Body.setVelocity(sprite.body, velocity);
 
+const set = (sprite: Sprite, options: object) => Body.set(sprite.body, options);
+
 const groupBy =
   (iteratee: (s: string) => number) =>
   (acc: Sprite[][], [key, value]: [string, Sprite]) => {
@@ -68,7 +70,7 @@ const flying: State = (domain, { touches, dispatch }) => {
 
   Object.entries(sprites)
     .filter(([key]) => key.startsWith('floor'))
-    .forEach(([_, floor]) => {
+    .forEach(([, floor]) => {
       if (floor.body.position.x + MaxWidth / 2 <= 0)
         setPosition(floor, { x: MaxWidth + MaxWidth / 2, y: floor.body.position.y });
 
@@ -76,8 +78,8 @@ const flying: State = (domain, { touches, dispatch }) => {
     });
 
   Events.on(engine, COLLISION_START, (e) => {
-    const [{ bodyB }] = e.pairs;
-    state = bodyB.label === 'floor' ? gameOver : collision;
+    const [{ bodyA }] = e.pairs;
+    state = bodyA.label === 'floor' ? gameOver : collision;
   });
 
   return domain;
@@ -86,9 +88,19 @@ const flying: State = (domain, { touches, dispatch }) => {
 // collision
 
 const collision: State = (domain) => {
-  const { bird } = domain;
+  const { engine, bird, ...sprites } = domain;
 
-  move(bird, { x: -40, y: -20 });
+  Object.entries(sprites)
+    .filter(([key]) => key.startsWith('pipe'))
+    .forEach(([, pipe]) => {
+      set(pipe, {
+        collisionFilter: {
+          mask: 0,
+        },
+      });
+    });
+
+  move(bird, { x: -20, y: -20 });
   setVelocity(bird, { x: 0, y: 10 });
   state = crashing;
 

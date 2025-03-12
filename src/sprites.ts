@@ -16,7 +16,6 @@ export const sprites = {
     const engine = Engine.create({ enableSleeping: false, gravity: { y: 0.8 } });
 
     const sprites = {
-      bird: bird.create(position(MaxWidth / 3, MaxHeight / 2), size(40, 40)),
       'pipe:0:top': pipe.create('Top', firstPair.top.position, firstPair.size),
       'pipe:0:bottom': pipe.create('Bottom', firstPair.bottom.position, firstPair.size),
       'pipe:1:top': pipe.create('Top', secondPair.top.position, secondPair.size),
@@ -26,6 +25,7 @@ export const sprites = {
         position(MaxWidth + MaxWidth / 2, MaxHeight - 25),
         size(MaxWidth, 50)
       ),
+      bird: bird.create(position(MaxWidth / 3, MaxHeight / 2), size(40, 40)),
     };
 
     Composite.add(
