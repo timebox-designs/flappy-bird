@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Audio, AVPlaybackSource } from 'expo-av';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
@@ -55,6 +56,10 @@ const Game = () => {
     );
   }, []);
 
+  useEffect(() => {
+    AsyncStorage.getItem(constants.HighScore).then((score) => score && setHighScore(Number(score)));
+  }, []);
+
   const onStart = () => {
     setState(constants.Running);
     setScore(0);
@@ -63,9 +68,13 @@ const Game = () => {
   const onRestart = () => setState(constants.StartGame);
 
   const onDie = async () => {
-    if (score > highScore) setHighScore(score);
     setState(constants.GameOver);
     await dieAudio?.sound.replayAsync();
+
+    if (score > highScore) {
+      await AsyncStorage.setItem(constants.HighScore, String(score));
+      setHighScore(score);
+    }
   };
 
   const onCollision = async () => await hitAudio?.sound.replayAsync();
