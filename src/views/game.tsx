@@ -37,16 +37,19 @@ const createSound = (audio: AVPlaybackSource) => Audio.Sound.createAsync(audio);
 const Game = () => {
   const [state, setState] = useState(constants.StartGame);
   const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(0);
 
+  const [dieAudio, setDieAudio] = useState<Audio.SoundObject>();
   const [hitAudio, setHitAudio] = useState<Audio.SoundObject>();
-  const [scoreAudio, setScoreAudio] = useState<Audio.SoundObject>();
+  const [pointAudio, setPointAudio] = useState<Audio.SoundObject>();
   const [wingAudio, setWingAudio] = useState<Audio.SoundObject>();
 
   useEffect(() => {
-    Promise.all([Sounds.Hit, Sounds.Score, Sounds.Wing].map(createSound)).then(
-      ([hit, score, wing]) => {
+    Promise.all([Sounds.Die, Sounds.Hit, Sounds.Point, Sounds.Wing].map(createSound)).then(
+      ([die, hit, point, wing]) => {
+        setDieAudio(die);
         setHitAudio(hit);
-        setScoreAudio(score);
+        setPointAudio(point);
         setWingAudio(wing);
       }
     );
@@ -59,35 +62,43 @@ const Game = () => {
 
   const onRestart = () => setState(constants.StartGame);
 
-  const onGameOver = async () => {
+  const onDie = async () => {
+    if (score > highScore) setHighScore(score);
     setState(constants.GameOver);
-    await hitAudio?.sound.replayAsync();
+    await dieAudio?.sound.replayAsync();
   };
 
-  const onPress = async () => await wingAudio?.sound.replayAsync();
+  const onCollision = async () => await hitAudio?.sound.replayAsync();
+  const onFlap = async () => await wingAudio?.sound.replayAsync();
 
-  const onScore = async () => {
+  const onPoint = async () => {
     setScore(score + 1);
-    await scoreAudio?.sound.replayAsync();
+    await pointAudio?.sound.replayAsync();
   };
 
   const onEvent = async ({ type }: Event) => {
     switch (type) {
-      case 'game-over':
-        await onGameOver();
+      case constants.Collision:
+        await onCollision();
         break;
 
-      case 'press':
-        await onPress();
+      case constants.Die:
+        await onDie();
         break;
 
-      case 'score':
-        await onScore();
+      case constants.Flap:
+        await onFlap();
+        break;
+
+      case constants.Point:
+        await onPoint();
         break;
     }
   };
 
-  if (isGameOver(state)) return <GameOver onRestart={onRestart} />;
+  if (isGameOver(state))
+    return <GameOver onRestart={onRestart} score={score} highScore={highScore} />;
+
   if (!isRunning(state)) return <Start onStart={onStart} />;
 
   return (

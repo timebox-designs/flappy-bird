@@ -1,11 +1,18 @@
 import { Vector } from 'matter-js';
 
-import { Size } from './types';
+import { Size, Sprite } from './types';
 
 import { constants } from '@/constants';
 
 // prettier-ignore
 export const eq = <T,>(a: T) => (b: T) => a === b;
+
+export const groupBy =
+  (iteratee: (s: string) => number) =>
+  (acc: Sprite[][], [key, value]: [string, Sprite]) => {
+    (acc[iteratee(key)] ??= []).push(value);
+    return acc;
+  };
 
 export const position = Vector.create;
 

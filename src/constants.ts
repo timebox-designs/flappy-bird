@@ -10,4 +10,8 @@ export const constants = {
   StartGame: 0,
   Running: 1,
   GameOver: 2,
+  Collision: 'collision',
+  Die: 'die',
+  Flap: 'flap',
+  Point: 'point',
 };

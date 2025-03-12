@@ -6,16 +6,17 @@ import {
 
 import { constants } from '@/constants';
 import { Domain, Sprite } from '@/types';
-import { generatePairs } from '@/utils';
+import { generatePairs, groupBy } from '@/utils';
 
 const { MaxWidth } = constants;
-
 const COLLISION_START = 'collisionStart';
-const GAME_OVER = { type: 'game-over' };
-const PRESS = { type: 'press' };
-const SCORE = { type: 'score' };
 
-const onPress = (touch: TouchEvent) => touch.type === 'press';
+const createEvent = (type: string) => ({ type });
+
+const CollisionEvent = createEvent(constants.Collision);
+const DieEvent = createEvent(constants.Die);
+const FlapEvent = createEvent(constants.Flap);
+const PointEvent = createEvent(constants.Point);
 
 type State = (domain: Domain, event: UpdateEvent) => Domain;
 type Fn = (sprite: Sprite, vector: Vector) => void;
@@ -25,17 +26,11 @@ const setPosition: Fn = (sprite, position) => Body.setPosition(sprite.body, posi
 const setVelocity: Fn = (sprite, velocity) => Body.setVelocity(sprite.body, velocity);
 
 const set = (sprite: Sprite, options: object) => Body.set(sprite.body, options);
-
-const groupBy =
-  (iteratee: (s: string) => number) =>
-  (acc: Sprite[][], [key, value]: [string, Sprite]) => {
-    (acc[iteratee(key)] ??= []).push(value);
-    return acc;
-  };
+const onPress = (touch: TouchEvent) => touch.type === 'press';
 
 const toPairs = groupBy((key) => Number(key.split(':')[1])); // "pipe:n:top|bottom"
 
-let scored = false;
+let point = false;
 
 // flying
 
@@ -44,16 +39,16 @@ const flying: State = (domain, { touches, dispatch }) => {
 
   touches.filter(onPress).forEach(() => {
     setVelocity(bird, { x: 0, y: -6 });
-    dispatch(PRESS);
+    dispatch(FlapEvent);
   });
 
   Object.entries(sprites)
     .filter(([key]) => key.startsWith('pipe'))
     .reduce(toPairs, [])
     .forEach(([topPipe, bottomPipe]) => {
-      if (!scored && bird.body.position.x > topPipe.body.position.x) {
-        dispatch(SCORE);
-        scored = true;
+      if (!point && bird.body.position.x > topPipe.body.position.x) {
+        dispatch(PointEvent);
+        point = true;
       }
 
       if (topPipe.body.bounds.max.x <= 0) {
@@ -61,7 +56,7 @@ const flying: State = (domain, { touches, dispatch }) => {
 
         setPosition(topPipe, top.position);
         setPosition(bottomPipe, bottom.position);
-        scored = false;
+        point = false;
       }
 
       move(topPipe, { x: -3, y: 0 });
@@ -79,7 +74,7 @@ const flying: State = (domain, { touches, dispatch }) => {
 
   Events.on(engine, COLLISION_START, (e) => {
     const [{ bodyA }] = e.pairs;
-    state = bodyA.label === 'floor' ? gameOver : collision;
+    state = bodyA.label === 'floor' ? die : collision;
   });
 
   return domain;
@@ -87,7 +82,7 @@ const flying: State = (domain, { touches, dispatch }) => {
 
 // collision
 
-const collision: State = (domain) => {
+const collision: State = (domain, { dispatch }) => {
   const { engine, bird, ...sprites } = domain;
 
   Object.entries(sprites)
@@ -102,6 +97,7 @@ const collision: State = (domain) => {
 
   move(bird, { x: -20, y: -20 });
   setVelocity(bird, { x: 0, y: 10 });
+  dispatch(CollisionEvent);
   state = crashing;
 
   return domain;
@@ -111,15 +107,15 @@ const collision: State = (domain) => {
 
 const crashing: State = (domain) => {
   const { engine } = domain;
-  Events.on(engine, COLLISION_START, () => (state = gameOver));
+  Events.on(engine, COLLISION_START, () => (state = die));
 
   return domain;
 };
 
-// gameOver
+// die
 
-const gameOver: State = (domain, { dispatch }) => {
-  dispatch(GAME_OVER);
+const die: State = (domain, { dispatch }) => {
+  dispatch(DieEvent);
   state = reset;
 
   return domain;
