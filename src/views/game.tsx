@@ -18,10 +18,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   score: {
+    color: 'white',
     fontFamily: 'FlappyBird',
     fontSize: 48,
     textAlign: 'center',
-    color: 'white',
+    textShadowColor: 'black',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
     marginTop: 100,
   },
 });
