@@ -5,6 +5,7 @@ import { ImageBackground, StatusBar } from 'react-native';
 
 import { Fonts } from '@/assets/fonts';
 import { Images } from '@/assets/images';
+import { SoundProvider } from '@/components/sound';
 import Game from '@/views/game';
 
 SplashScreen.preventAutoHideAsync();
@@ -21,7 +22,9 @@ export default function App() {
   return (
     <ImageBackground source={Images.Background} resizeMode="cover" style={{ flex: 1 }}>
       <StatusBar hidden />
-      <Game />
+      <SoundProvider>
+        <Game />
+      </SoundProvider>
     </ImageBackground>
   );
 }

@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Audio, AVPlaybackSource } from 'expo-av';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { GameEngine } from 'react-native-game-engine';
@@ -7,7 +6,7 @@ import { GameEngine } from 'react-native-game-engine';
 import GameOver from './game-over';
 import Start from './start';
 
-import { Sounds } from '@/assets/sounds';
+import { playSound, useSound } from '@/components/sound';
 import { constants } from '@/constants';
 import { physics } from '@/physics';
 import { sprites } from '@/sprites';
@@ -33,28 +32,11 @@ const styles = StyleSheet.create({
 const isRunning = eq(constants.Running);
 const isGameOver = eq(constants.GameOver);
 
-const createSound = (audio: AVPlaybackSource) => Audio.Sound.createAsync(audio);
-
 const Game = () => {
   const [state, setState] = useState(constants.StartGame);
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
-
-  const [dieAudio, setDieAudio] = useState<Audio.SoundObject>();
-  const [hitAudio, setHitAudio] = useState<Audio.SoundObject>();
-  const [pointAudio, setPointAudio] = useState<Audio.SoundObject>();
-  const [wingAudio, setWingAudio] = useState<Audio.SoundObject>();
-
-  useEffect(() => {
-    Promise.all([Sounds.Die, Sounds.Hit, Sounds.Point, Sounds.Wing].map(createSound)).then(
-      ([die, hit, point, wing]) => {
-        setDieAudio(die);
-        setHitAudio(hit);
-        setPointAudio(point);
-        setWingAudio(wing);
-      }
-    );
-  }, []);
+  const sounds = useSound();
 
   useEffect(() => {
     AsyncStorage.getItem(constants.HighScore).then((score) => score && setHighScore(Number(score)));
@@ -67,40 +49,27 @@ const Game = () => {
 
   const onRestart = () => setState(constants.StartGame);
 
-  const onDie = async () => {
-    setState(constants.GameOver);
-    await dieAudio?.sound.replayAsync();
-
-    if (score > highScore) {
-      await AsyncStorage.setItem(constants.HighScore, String(score));
-      setHighScore(score);
-    }
-  };
-
-  const onCollision = async () => await hitAudio?.sound.replayAsync();
-  const onFlap = async () => await wingAudio?.sound.replayAsync();
-
-  const onPoint = async () => {
-    setScore(score + 1);
-    await pointAudio?.sound.replayAsync();
-  };
-
-  const onEvent = async ({ type }: Event) => {
+  const onEvent = ({ type }: Event) => {
     switch (type) {
       case constants.Collision:
-        await onCollision();
+        playSound(sounds.Hit);
         break;
 
       case constants.Die:
-        await onDie();
+        if (score > highScore)
+          AsyncStorage.setItem(constants.HighScore, String(score)).then(() => setHighScore(score));
+
+        playSound(sounds.Die);
+        setState(constants.GameOver);
         break;
 
       case constants.Flap:
-        await onFlap();
+        playSound(sounds.Wing);
         break;
 
       case constants.Point:
-        await onPoint();
+        playSound(sounds.Point);
+        setScore(score + 1);
         break;
     }
   };
