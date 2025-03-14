@@ -26,6 +26,10 @@ From your terminal, run the following commands:
    npm start
    ```
 
+## Assumptions
+
+I've been testing this project with the iOS simulator. If you want to do the same, make sure you have [Xcode](https://developer.apple.com/documentation/safari-developer-tools/installing-xcode-and-simulators) installed first.
+
 ## What You Get
 
 https://github.com/user-attachments/assets/ecff668f-ae56-43d8-afd6-db372dbdcd3c
