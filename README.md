@@ -28,4 +28,4 @@ From your terminal, run the following commands:
 
 ## What You Get
 
-https://github.com/user-attachments/assets/51e922a1-0275-41e4-b04a-4823e26f5084
+https://github.com/user-attachments/assets/ecff668f-ae56-43d8-afd6-db372dbdcd3c
